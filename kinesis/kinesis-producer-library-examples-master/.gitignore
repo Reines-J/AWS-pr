@@ -1,8 +1,0 @@
-target/
-*.iml
-.settings
-.idea
-.DS_Store
-.classpath
-.project
-.factorypath

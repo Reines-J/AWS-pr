@@ -1,0 +1,10 @@
+clusterName: terra-eks-test
+serviceAccount:
+  name: alb-controller
+  annotations: 
+    eks.amazonaws.com/role-arn: arn:aws:iam::<>
+region: ap-northeast-2
+vpcId: vpc-<>
+enableShield: false
+enableWaf: false
+enableWafv2: false

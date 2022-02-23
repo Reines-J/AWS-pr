@@ -1,0 +1,30 @@
+image:
+  repository: amazon/aws-efs-csi-driver
+  tag: ""
+  pullPolicy: IfNotPresent
+
+controller:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::<>
+
+node:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::<>
+
+storageClasses: 
+ - name: efs-sc
+   annotations:
+     storageclass.kubernetes.io/is-default-class: "true"
+   mountOptions:
+   - tls
+   parameters:
+     provisioningMode: efs-ap
+     fileSystemId: fs-<>
+     directoryPerms: "700"
+     gidRangeStart: "1000"
+     gidRangeEnd: "2000"
+     basePath: "/dynamic_provisioning"
+   reclaimPolicy: Delete
+   volumeBindingMode: Immediate

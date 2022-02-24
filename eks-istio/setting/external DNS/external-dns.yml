@@ -1,0 +1,24 @@
+image:
+  repository: k8s.gcr.io/external-dns/external-dns
+  # Overrides the image tag whose default is v{{ .Chart.AppVersion }}
+  tag: ""
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<>
+  name: external-dns
+
+policy: upsert-only
+
+registry: txt
+txtOwnerId: <>
+txtPrefix: ""
+
+domainFilters: [reines-test.link]
+
+provider: aws

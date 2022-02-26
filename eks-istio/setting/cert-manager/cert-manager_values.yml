@@ -1,0 +1,14 @@
+installCRDs: true
+leaderElection:
+  # Override the namespace used to store the ConfigMap for leader election
+  namespace: eks
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<>
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+webhook:
+  hostNetwork: true
+  securePort: 10260

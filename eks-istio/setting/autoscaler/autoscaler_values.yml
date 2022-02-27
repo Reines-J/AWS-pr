@@ -1,0 +1,19 @@
+
+cloudProvider: aws
+awsRegion: ap-northeast-2
+
+autoDiscovery:
+  clusterName: terra-eks-test
+  tags:
+  - k8s.io/cluster-autoscaler/enabled
+  - k8s.io/cluster-autoscaler/{{ .Values.autoDiscovery.clusterName }}
+  - kubernetes.io/cluster/{{ .Values.autoDiscovery.clusterName }}
+
+fullnameOverride: "cluster-autoscaler"
+
+rbac:
+  serviceAccount:
+    name : "cluster-autoscaler"
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::<>
+      

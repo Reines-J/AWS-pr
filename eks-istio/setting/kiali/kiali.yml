@@ -1,0 +1,32 @@
+istio_namespace: "istio-system" # default is where Kiali is installed
+auth:
+  strategy: anonymous
+deployment:
+  image_version: latest
+  version_label: latest
+  affinity:
+    node: {}
+    pod: {}
+    pod_anti: {}
+  ingress:
+    class_name: ""
+    #enabled:
+    override_yaml:
+      metadata: {}
+  service_annotations: {}
+  service_type: ClusterIP
+external_services:
+  custom_dashboards:
+    enabled: true
+  istio:
+    root_namespace: ""
+  prometheus:
+    url: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local
+  grafana:
+    url: http://<>.reines-test.link
+    InClusterurl: http://prometheus-stack-grafana.monitoring.svc.cluster.local
+  jaeger: 
+    url: http://<>.reines-test.link
+    InClusterurl: http://tracing/jaeger.istio-system.svc.cluster.local
+#InClusterurl: http://tracing/jaeger
+#http://prometheus-stack-kube-prom-prometheus.monitoring:9090/

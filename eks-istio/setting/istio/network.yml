@@ -1,0 +1,380 @@
+
+#---
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  name: istio-ingress
+#  namespace: istio-system
+#  annotations:
+#    kubernetes.io/ingress.class: alb
+#    alb.ingress.kubernetes.io/scheme: internet-facing
+#    alb.ingress.kubernetes.io/target-type: ip
+#    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80, "HTTPS": 443}]'
+#    #alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+#    #alb.ingress.kubernetes.io/subnets: subnet-, subnet-
+#    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:{account-nubmer}:certificate/{id}
+#    #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-2016-08
+#    #cert-manager.io/cluster-issuer: letsencrypt-prod
+#    external-dns.alpha.kubernetes.io/hostname: 
+#      <>.reines-test.link, <>.reines-test.link, <>.reines-test.link,
+#      <>.reines-test.link, <>.reines-test.link, <>.reines-test.link,
+#      <>.reines-test.link, <>.reines-test.link, <>.reines-test.link 
+      
+#spec:
+#  rules:
+##  - http:
+##      paths:
+##      - backend:
+##          serviceName: ssl-redirect
+##          servicePort: use-annotation
+#  - http:
+#      paths:
+#      - path: /*
+#        backend:
+#          serviceName: istio-ingressgateway
+#          servicePort: 80
+#  tls:
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: jen-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: argo-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: gra-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: pro-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: jaeger-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: kiali-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: ela-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: kib-tls
+#  - hosts:
+#      - <>.reines-test.link
+#    secretName: dash-tls
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - *.reines-test.link
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#  - hosts:
+#    - <>.reines-test.link
+#    port:
+#      name: http
+#      number: 80
+#      protocol: HTTP
+#    tls: 
+#      mode: SIMPLE
+#      credentialName: argo-tls
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argocd-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : jenkins
+    route:
+    - destination:
+        host: jenkins.cicd.svc.cluster.local
+        port:
+          number: 80
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: jen-dr
+#  namespace: cicd
+#spec:
+#  host: jenkins.cicd.svc.cluster.local
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argocd-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : argocd 
+    route:
+    - destination:
+        host: argocd-server.cicd.svc.cluster.local
+        port:
+          number: 80
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: argo-dr
+#  namespace: cicd
+#spec:
+#  host: argocd-server.cicd.svc.cluster.local
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: pro-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : prometheus
+    route:
+    - destination:
+        host: prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local
+        port:
+          number: 9090
+
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: pro-dr
+#  namespace: monitoring
+#spec:
+#  host: prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+#
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gra-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : grafana
+    route:
+    - destination:
+        host: prometheus-stack-grafana.monitoring.svc.cluster.local
+        port:
+          number: 80
+
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: gra-dr
+#  namespace: monitoring
+#spec:
+#  host: 
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kia-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : kiali
+    route:
+    - destination:
+        host: kiali.istio-system.svc.cluster.local
+        port:
+          number: 20001
+      
+---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: kia-vs
+#  namespace: net
+#spec:
+#  host: 
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+#
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: jas-vs
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : jaeger
+    route:
+    - destination:
+        host: tracing.istio-system.svc.cluster.local
+        port:
+          number: 80
+
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: jae-dr
+#  namespace: net
+#spec:
+#  host: 
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ela-vs
+  namespace: logging
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : elastic
+    route:
+    - destination:
+        host: elasticsearch-master.logging.svc.cluster.local
+        port:
+          number: 9200
+
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: ela-dr
+#  namespace: net
+#spec:
+#  host: 
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - <>.reines-test.link
+  http:
+  - name : kibana
+    route:
+    - destination:
+        host: efk-kibana.logging.svc.cluster.local
+        port:
+          number: 5601
+
+
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: kib-dr
+#  namespace: net
+#spec:
+#  host: 
+#  subsets:
+#  - name: v1
+#    labels:
+#      version: v1.0

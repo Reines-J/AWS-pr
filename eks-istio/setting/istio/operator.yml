@@ -1,0 +1,48 @@
+# istio config
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  namespace: istio-system
+  name: controlplane
+spec:
+#  profile: demo
+  tag: latest
+  revision: 1-1
+  meshConfig:
+    accessLogEncoding: JSON
+  components:
+    egressGateways:
+    - name: istio-egressgateway
+      enabled: true
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        service:
+          type: ClusterIP
+    base:
+      - name: istiod
+        enabled: true
+    cni:
+      - name: istio-cni
+        enabled: false
+  addonComponents:
+    tracing:
+      enabled: true
+      k8s:
+        replicaCount: 1
+    kiali:
+      enabled: true
+      k8s:
+        replicaCount: 1
+#  values:
+#    kiali:
+#       enabled: true
+#      dashboard:
+#        auth:
+#          strategy: anonymous
+#        grafanaURL: http://<>.reines-test.link
+#        grafanaInClusterURL: http://prometheus-stack-grafana.monitoring.svc.cluster.local:3000
+#        jaegerURL: http://<>.reines-test.link
+#        jaegerInClusterURL: http://tracing/jaeger
+#      prometheusAddr: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090

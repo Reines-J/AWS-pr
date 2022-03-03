@@ -1,0 +1,77 @@
+#namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-system
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cicd
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eks
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: operator
+  labels:
+    istio-injection: enabled
+spec:
+  finalizers:
+  - kubernetes
+  

@@ -1,0 +1,15 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "firehose:PutRecord",
+                "firehose:PutRecordBatch"
+            ],
+            "Resource": [
+                "arn:aws:firehose:ap-northeast-2:<id>:deliverystream/firehose-elastic"
+            ]
+        }
+    ]
+}

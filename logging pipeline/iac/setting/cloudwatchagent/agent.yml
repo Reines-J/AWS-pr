@@ -1,0 +1,4 @@
+clusterName: logging-pipeline
+serviceAccount:
+  annotations: 
+    eks.amazonaws.com/role-arn: arn:aws:iam::<id>:role/eks-node
